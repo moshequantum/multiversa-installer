@@ -1,8 +1,8 @@
 [package]
 name = "multiversa-installer"
-version = "0.2.0"
-description = "Instalador visual de MultiversaOS — capa sobre el CLI multiversa"
-authors = ["Multiversa Group"]
+version = "0.2.0-rc.1"
+description = "Visual installer for creating a unique Multiversa Project OS"
+authors = ["Multiversa Lab"]
 license = "MIT"
 repository = "https://github.com/moshequantum/multiversa-installer"
 edition = "2021"
