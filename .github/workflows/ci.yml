@@ -1,0 +1,63 @@
+name: installer
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-14, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Linux native dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - run: pnpm install --frozen-lockfile
+      - name: Compile Tauri application
+        run: pnpm tauri build --no-bundle
+
+  cli-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: moshequantum/multiversa-cli
+          path: multiversa-cli
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+      - name: Build compatible CLI
+        run: go build -o "$RUNNER_TEMP/multiversa" ./cmd/multiversa
+        working-directory: multiversa-cli
+      - name: Verify capability and Project OS contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$RUNNER_TEMP:$PATH"
+          test_home="$RUNNER_TEMP/e2e-home"
+          capabilities="$(multiversa capabilities --json)"
+          node -e 'const x=JSON.parse(process.argv[1]); if (!x.data.profile_schemas.includes("0.3-read-write")) process.exit(1)' "$capabilities"
+          HOME="$test_home" multiversa tenant new ci-demo \
+            --name "CI Demo OS" --os-name "CIDemoOS" --owner "CI" \
+            --route lab --engagement self-service --json > "$RUNNER_TEMP/created.json"
+          node -e 'const x=require(process.argv[1]); if (x.data.manifest.tenant.kind !== "project-os") process.exit(1)' "$RUNNER_TEMP/created.json"
