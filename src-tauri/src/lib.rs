@@ -1,4 +1,4 @@
-//! MultiversaOS visual installer — Tauri backend.
+//! Multiversa Project OS visual installer — Tauri backend.
 //!
 //! This layer deliberately owns almost no logic. Every operation that changes
 //! the user's machine is delegated to the `multiversa` CLI, which is the single
