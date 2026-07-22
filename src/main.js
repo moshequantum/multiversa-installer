@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   MultiversaOS — Instalador · lógica de la interfaz
+   Multiversa Project OS Installer · lógica de la interfaz
 
    Regla que gobierna este archivo: **nunca afirmar algo que no ocurrió.**
 
@@ -138,7 +138,7 @@ function renderScan(report) {
       <ul class="tools">${tools.map(toolRow).join('')}</ul>
     </div>
     <div class="scan__group">
-      <h2 class="scan__title">Motores de MultiversaOS</h2>
+      <h2 class="scan__title">Motores detectados por Multiversa</h2>
       <ul class="tools">${core.map(engineRow).join('')}</ul>
       <p class="help">
         Lo que falte se instala en el paso siguiente. No necesitas Homebrew:
@@ -332,7 +332,7 @@ function paintReview() {
     <dt>Conexiones</dt><dd>${connList}</dd>
     <dt>Se creará</dt><dd>
       El manifiesto <code>multiversa.toml</code> con tu ADN
-      <span class="muted">y una bóveda con permisos 0700 que MultiversaOS nunca expone.</span>
+      <span class="muted">y una bóveda con permisos 0700 que Multiversa no serializa.</span>
     </dd>
     <dt>No se hará</dt><dd>
       Nada se sube a internet
