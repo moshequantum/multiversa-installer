@@ -1,0 +1,27 @@
+# Artefactos de compilación de Rust — 3.9 GB, nunca al repo
+src-tauri/target/
+
+# Dependencias
+node_modules/
+
+# Bundles generados
+src-tauri/gen/schemas/
+
+# Secretos: el instalador maneja tokens de ElevenLabs e InsForge.
+# Nada de credenciales en el repo — MultiversaOS es MIT y público.
+.env
+.env.*
+!.env.example
+*.env
+secrets.env
+*.pem
+*.key
+
+# Memorias de Engram: los chunks son JSONL EN CLARO (verificado 2026-07-21).
+# Sin esto, un tenant commitea datos de sus clientes legibles.
+.engram/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log

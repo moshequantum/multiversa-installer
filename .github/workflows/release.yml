@@ -1,0 +1,73 @@
+name: Compile and Release Tauri Installer
+
+on:
+  push:
+    tags:
+      - 'v*' # Se ejecuta al subir etiquetas de versión como v0.7.0, v1.0.0, etc.
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest' # macOS x86_64 y ARM64
+            args: '--target universal-apple-darwin'
+          - platform: 'ubuntu-22.04' # Linux deb/AppImage (Tauri v2 prefiere Ubuntu 22.04 para compatibilidad de glibc)
+            args: ''
+          - platform: 'windows-latest' # Windows x64 MSI/EXE
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. Configurar Node.js y pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10 # Bloqueado a v10 o superior compatible con pnpm@10.33.0 / v11
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-env: 'production'
+          cache: 'pnpm'
+
+      # 2. Configurar Rust
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'x86_64-apple-darwin,aarch64-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      # 3. Instalar prerrequisitos específicos de Linux (WebKitGTK y librerías gráficas)
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsoup-3.0-dev libjavascriptcoregtk-4.1-dev libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libgtk-3-dev
+
+      # 4. Instalar dependencias de frontend
+      - name: Install frontend dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      # 5. Compilar y publicar los ejecutables nativos en los Releases de GitHub
+      - name: Build Tauri App
+        uses: tauri-apps/tauri-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'MultiversaOS Installer ${{ github.ref_name }}'
+          releaseBody: 'Este es el paquete oficial compilado del instalador visual e interactivo asistido por voz para MultiversaOS.'
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}

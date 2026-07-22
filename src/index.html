@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Sin CDN: las fuentes viven en design-system/fonts/. Un instalador se usa
+       a menudo sin red, y es justo cuando más tiene que verse bien. -->
+  <title>MultiversaOS — Instalador</title>
+  <link rel="icon" href="design-system/assets/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <main class="shell">
+
+    <!-- ───────────────────────── Barra lateral ───────────────────────── -->
+    <aside class="rail">
+      <header class="brand">
+        <img class="brand__mark" src="design-system/assets/Logotipo.svg" alt="" width="28" height="28">
+        <div class="brand__text">
+          <p class="brand__name">MultiversaOS</p>
+          <p class="brand__meta">Instalador</p>
+        </div>
+      </header>
+
+      <nav aria-label="Progreso de la instalación">
+        <ol class="steps" id="steps">
+          <li class="step is-current" data-step="1" aria-current="step">
+            <span class="step__num">01</span><span class="step__label">Bienvenida</span>
+          </li>
+          <li class="step" data-step="2">
+            <span class="step__num">02</span><span class="step__label">Requisitos</span>
+          </li>
+          <li class="step" data-step="3">
+            <span class="step__num">03</span><span class="step__label">Tu ADN</span>
+          </li>
+          <li class="step" data-step="4">
+            <span class="step__num">04</span><span class="step__label">Conexiones</span>
+          </li>
+          <li class="step" data-step="5">
+            <span class="step__num">05</span><span class="step__label">Revisión</span>
+          </li>
+          <li class="step" data-step="6">
+            <span class="step__num">06</span><span class="step__label">Instalación</span>
+          </li>
+          <li class="step" data-step="7">
+            <span class="step__num">07</span><span class="step__label">Listo</span>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- La voz acompaña el onboarding. Apagada por defecto: se enciende a
+           petición, nunca sorprende al usuario con audio. -->
+      <section class="voice" aria-labelledby="voice-title">
+        <div class="voice__head">
+          <h2 class="label" id="voice-title">Voz guía</h2>
+          <label class="switch">
+            <input type="checkbox" id="voiceToggle">
+            <span class="switch__track" aria-hidden="true"></span>
+            <span class="sr-only">Activar la voz guía</span>
+          </label>
+        </div>
+        <p class="voice__state" id="voiceState" role="status">Desactivada</p>
+
+        <div class="voice__config" id="voiceConfig" hidden>
+          <label class="field">
+            <span class="label">Clave de ElevenLabs</span>
+            <input type="password" id="voiceKey" autocomplete="off" spellcheck="false"
+                   placeholder="xi-api-key" aria-describedby="voiceKeyHelp">
+          </label>
+          <p class="help" id="voiceKeyHelp">
+            Se guarda solo en memoria. Sin clave se usa la voz del sistema.
+          </p>
+          <label class="field">
+            <span class="label">Timbre</span>
+            <select id="voicePick">
+              <option value="EXAVITQu4vr4xnSDxMaL">Claro y profesional</option>
+              <option value="21m00Tcm4TlvDq8ikWAM">Cálido y cercano</option>
+              <option value="AZnzlk1XusfhxrGGcnFv">Dinámico</option>
+              <option value="pNInz6obpgfrhhF21qiJ">Grave</option>
+            </select>
+          </label>
+        </div>
+      </section>
+    </aside>
+
+    <!-- ───────────────────────── Contenido ───────────────────────── -->
+    <section class="pane" id="contenido">
+
+      <!-- 01 · Bienvenida ------------------------------------------------ -->
+      <article class="view is-active" id="view1" aria-labelledby="t1">
+        <div class="view__body">
+          <p class="eyebrow">Paso 01 de 07</p>
+          <h1 class="display" id="t1">Tu propio<br><em>sistema operativo</em></h1>
+          <p class="lede">
+            MultiversaOS orquesta los motores que ya usas y les da memoria,
+            criterio y tu forma de trabajar. En unos minutos tendrás tu perfil
+            creado en esta máquina.
+          </p>
+
+          <ul class="facts">
+            <li class="fact">
+              <span class="fact__key">Dónde vive</span>
+              <span class="fact__val">Solo en tu equipo. Nada sube a internet.</span>
+            </li>
+            <li class="fact">
+              <span class="fact__key">Quién decide</span>
+              <span class="fact__val">Tú. El sistema propone y prepara; nunca actúa solo.</span>
+            </li>
+            <li class="fact">
+              <span class="fact__key">Reversible</span>
+              <span class="fact__val">Nada se sobrescribe. Puedes repetirlo cuando quieras.</span>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="actions">
+          <span class="actions__note">Puedes salir en cualquier momento.</span>
+          <button class="btn btn--primary" data-go="2">Comenzar</button>
+        </footer>
+      </article>
+
+      <!-- 02 · Requisitos ------------------------------------------------ -->
+      <article class="view" id="view2" aria-labelledby="t2" hidden>
+        <div class="view__body">
+          <p class="eyebrow">Paso 02 de 07</p>
+          <h1 class="display" id="t2">Qué hay en<br><em>tu máquina</em></h1>
+          <p class="lede">
+            Leemos tu equipo antes de tocar nada. Esto no instala nada todavía.
+          </p>
+
+          <div class="scan" id="scan" role="status" aria-live="polite">
+            <div class="scan__loading" id="scanLoading">
+              <span class="spinner" aria-hidden="true"></span>
+              <span>Leyendo tu sistema…</span>
+            </div>
+          </div>
+        </div>
+
+        <footer class="actions">
+          <button class="btn btn--ghost" data-go="1">Atrás</button>
+          <button class="btn btn--quiet" id="rescan" hidden>Volver a leer</button>
+          <button class="btn btn--primary" data-go="3" id="next2" disabled>Continuar</button>
+        </footer>
+      </article>
+
+      <!-- 03 · ADN ------------------------------------------------------- -->
+      <article class="view" id="view3" aria-labelledby="t3" hidden>
+        <div class="view__body">
+          <p class="eyebrow">Paso 03 de 07</p>
+          <h1 class="display" id="t3">Tu <em>ADN</em></h1>
+          <p class="lede">
+            Esto define cómo piensa tu sistema. Empieza simple: podrás afinarlo
+            con el uso, y el sistema te propondrá ajustes cuando te conozca mejor.
+          </p>
+
+          <form class="form" id="dnaForm" novalidate>
+            <div class="field">
+              <label class="label" for="tName">Nombre de tu sistema</label>
+              <input type="text" id="tName" required autocomplete="off"
+                     placeholder="Mi OS" aria-describedby="tNameErr">
+              <p class="error" id="tNameErr" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="label" for="tSlug">Identificador</label>
+              <input type="text" id="tSlug" required autocomplete="off"
+                     spellcheck="false" aria-describedby="tSlugHelp tSlugErr">
+              <p class="help" id="tSlugHelp">
+                Se genera solo desde el nombre. Es el nombre de la carpeta.
+              </p>
+              <p class="error" id="tSlugErr" role="alert" hidden></p>
+            </div>
+
+            <fieldset class="field">
+              <legend class="label">Base del sistema</legend>
+              <div class="choices">
+                <label class="choice">
+                  <input type="radio" name="kind" value="project-os" checked>
+                  <span class="choice__box">
+                    <span class="choice__name">Project OS</span>
+                    <span class="choice__desc">Único para este proyecto; sin tiers ni perfiles prestados</span>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend class="label">Tus pilares</legend>
+              <p class="help">
+                Las dos o tres cosas que de verdad mueven tu proyecto. El sistema
+                prioriza según ellas. Puedes dejarlo como está.
+              </p>
+              <div class="pillars" id="pillars"></div>
+              <button type="button" class="btn btn--quiet" id="addPillar">Añadir pilar</button>
+            </fieldset>
+          </form>
+        </div>
+
+        <footer class="actions">
+          <button class="btn btn--ghost" data-go="2">Atrás</button>
+          <button class="btn btn--primary" data-go="4" id="next3">Continuar</button>
+        </footer>
+      </article>
+
+      <!-- 04 · Conexiones ------------------------------------------------ -->
+      <article class="view" id="view4" aria-labelledby="t4" hidden>
+        <div class="view__body">
+          <p class="eyebrow">Paso 04 de 07</p>
+          <h1 class="display" id="t4">Tus <em>conexiones</em></h1>
+          <p class="lede">
+            Las claves de los servicios que use tu sistema. Todo es opcional:
+            puedes dejarlo vacío y añadirlo después.
+          </p>
+
+          <div class="notice" role="note">
+            <p class="notice__title">Dónde se guardan</p>
+            <p class="notice__body">
+              En la bóveda de tu tenant, con permisos que solo tú puedes leer.
+              Nunca se sincronizan, nunca se muestran, nunca salen de esta máquina.
+            </p>
+          </div>
+
+          <form class="form" id="connForm" novalidate>
+            <div class="field">
+              <label class="label" for="connElevenKey">ElevenLabs — la voz de tu sistema</label>
+              <input type="password" id="connElevenKey" autocomplete="off" spellcheck="false"
+                     placeholder="xi-api-key" aria-describedby="connElevenHelp">
+              <p class="help" id="connElevenHelp">
+                Puede ser la misma clave de la voz guía de la barra lateral.
+              </p>
+            </div>
+
+            <fieldset class="field">
+              <legend class="label">InsForge — respaldo y sincronización</legend>
+              <p class="help">Solo si este sistema usa tu propio backend InsForge.</p>
+              <div class="conn-grid">
+                <input type="password" id="connInsforgeKey" autocomplete="off" spellcheck="false"
+                       placeholder="API key (ik-…)" aria-label="Clave de API de InsForge">
+                <input type="text" id="connInsforgeUrl" autocomplete="off" spellcheck="false"
+                       placeholder="https://tu-proyecto.insforge.app" aria-label="URL base de InsForge">
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+        <footer class="actions">
+          <button class="btn btn--ghost" data-go="3">Atrás</button>
+          <button class="btn btn--primary" data-go="5" id="next4">Revisar</button>
+        </footer>
+      </article>
+
+      <!-- 05 · Revisión -------------------------------------------------- -->
+      <article class="view" id="view5" aria-labelledby="t5" hidden>
+        <div class="view__body">
+          <p class="eyebrow">Paso 05 de 07</p>
+          <h1 class="display" id="t5">Antes de<br><em>escribir nada</em></h1>
+          <p class="lede">
+            Esto es exactamente lo que va a pasar en tu máquina. Nada se ejecuta
+            hasta que lo confirmes.
+          </p>
+          <dl class="review" id="review"></dl>
+        </div>
+
+        <footer class="actions">
+          <button class="btn btn--ghost" data-go="4">Atrás</button>
+          <button class="btn btn--primary" id="confirm">Crear mi sistema</button>
+        </footer>
+      </article>
+
+      <!-- 06 · Instalación ----------------------------------------------- -->
+      <article class="view" id="view6" aria-labelledby="t6" hidden>
+        <div class="view__body">
+          <p class="eyebrow">Paso 06 de 07</p>
+          <h1 class="display" id="t6">Creando<br><em>tu sistema</em></h1>
+
+          <div class="progress">
+            <div class="progress__row">
+              <span class="label" id="progressLabel" role="status" aria-live="polite">Preparando…</span>
+              <span class="progress__count mono" id="progressCount">0 / 2</span>
+            </div>
+            <div class="progress__track" role="progressbar"
+                 aria-valuemin="0" aria-valuemax="2" aria-valuenow="0"
+                 aria-labelledby="progressLabel" id="progressBar">
+              <span class="progress__fill" id="progressFill"></span>
+            </div>
+          </div>
+
+          <pre class="console" id="console" tabindex="0" aria-label="Registro de la instalación"></pre>
+        </div>
+
+        <footer class="actions">
+          <span class="actions__note" id="installNote"></span>
+          <button class="btn btn--ghost" id="retry" hidden>Reintentar</button>
+          <button class="btn btn--primary" data-go="7" id="next6" disabled>Continuar</button>
+        </footer>
+      </article>
+
+      <!-- 07 · Listo ----------------------------------------------------- -->
+      <article class="view" id="view7" aria-labelledby="t7" hidden>
+        <div class="view__body">
+          <p class="eyebrow">Paso 07 de 07</p>
+          <h1 class="display" id="t7">Tu sistema<br><em>existe</em></h1>
+          <p class="lede" id="doneLede"></p>
+
+          <ol class="next">
+            <li class="next__item">
+              <span class="next__num mono">01</span>
+              <div>
+                <p class="next__title">Compruébalo</p>
+                <p class="next__body">Abre una terminal y escribe <code>multiversa tenant show</code>.</p>
+              </div>
+            </li>
+            <li class="next__item">
+              <span class="next__num mono">02</span>
+              <div>
+                <p class="next__title">Dale memoria</p>
+                <p class="next__body">Todo lo que decidas queda guardado. Búscalo con <code>engram search</code>.</p>
+              </div>
+            </li>
+            <li class="next__item">
+              <span class="next__num mono">03</span>
+              <div>
+                <p class="next__title">Añade otro perfil</p>
+                <p class="next__body">Cada cliente puede tener el suyo, aislado: <code>multiversa tenant new</code>.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <footer class="actions">
+          <span class="actions__note">Puedes cerrar esta ventana.</span>
+          <button class="btn btn--primary" id="finish">Terminar</button>
+        </footer>
+      </article>
+
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

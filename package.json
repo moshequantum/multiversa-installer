@@ -1,0 +1,16 @@
+{
+  "name": "multiversa-installer",
+  "version": "0.2.0",
+  "description": "Visual installer for MultiversaOS",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.1.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4"
+  }
+}
