@@ -21,4 +21,9 @@ pnpm tauri build
 ```
 
 Los builds de Linux, macOS y Windows se verifican en GitHub Actions. Los bundles
-de release se publican únicamente desde tags firmados y con checksums.
+de release se publican únicamente desde tags versionados y con checksums.
+
+Los paquetes son deliberadamente específicos por plataforma: DEB/RPM en Linux,
+app/DMG universal en macOS y MSI/NSIS en Windows. No se distribuye AppImage
+porque su GLib/WebKit embebido no es confiable entre los hosts Linux soportados;
+en Linux se debe usar DEB o RPM.

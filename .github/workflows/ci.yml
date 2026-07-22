@@ -14,7 +14,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-14, windows-2022]
+        include:
+          - os: ubuntu-24.04
+            tauri_args: ''
+            rust_targets: ''
+          - os: macos-14
+            tauri_args: '--target universal-apple-darwin'
+            rust_targets: 'x86_64-apple-darwin,aarch64-apple-darwin'
+          - os: windows-2022
+            tauri_args: ''
+            rust_targets: ''
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
@@ -26,6 +35,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_targets }}
       - name: Linux native dependencies
         if: runner.os == 'Linux'
         run: |
@@ -33,7 +44,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
       - run: pnpm install --frozen-lockfile
       - name: Compile Tauri application
-        run: pnpm tauri build --no-bundle
+        run: pnpm tauri build ${{ matrix.tauri_args }}
 
   cli-contract:
     runs-on: ubuntu-24.04
@@ -62,3 +73,10 @@ jobs:
             --name "CI Demo OS" --os-name "CIDemoOS" --owner "CI" \
             --route lab --engagement self-service --json > "$RUNNER_TEMP/created.json"
           node -e 'const x=require(process.argv[1]); if (x.data.manifest.tenant.kind !== "project-os") process.exit(1)' "$RUNNER_TEMP/created.json"
+          printf %s 'ci-synthetic-secret' | HOME="$test_home" multiversa tenant set-secret ci-demo CI_TEST_KEY --json > "$RUNNER_TEMP/secret.json"
+          HOME="$test_home" multiversa tenant use ci-demo --json > "$RUNNER_TEMP/active.json"
+          HOME="$test_home" multiversa tenant show ci-demo --json > "$RUNNER_TEMP/shown.json"
+          test "$(stat -c '%a' "$test_home/.multiversa/tenants/ci-demo/vault")" = 700
+          test "$(stat -c '%a' "$test_home/.multiversa/tenants/ci-demo/vault/secrets.env")" = 600
+          ! grep -R 'ci-synthetic-secret' "$test_home/.multiversa/tenants/ci-demo/multiversa.toml" "$RUNNER_TEMP/created.json" "$RUNNER_TEMP/shown.json"
+          node -e 'const x=require(process.argv[1]); if (x.data.action !== "use" || x.data.active !== "ci-demo") process.exit(1)' "$RUNNER_TEMP/active.json"
