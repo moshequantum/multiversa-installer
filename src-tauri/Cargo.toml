@@ -1,6 +1,6 @@
 [package]
 name = "multiversa-installer"
-version = "0.2.0-3"
+version = "0.2.0-4"
 description = "Visual installer for creating a unique Multiversa Project OS"
 authors = ["Multiversa Lab"]
 license = "MIT"
